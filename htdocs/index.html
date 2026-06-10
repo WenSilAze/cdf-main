@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Carteira Digital Financeira: controle suas finanças com simplicidade, segurança e inteligência." />
+  <title>Carteira Digital Financeira</title>
+  <link rel="icon" href="assets/logomarca.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Carteira Digital Financeira</h1>
+      <p>Controle suas finanças. Faça seu dinheiro render.</p>
+    </header>
+
+    <main class="auth-options" aria-label="Opções de acesso">
+      <button class="btn primary" onclick="window.location.href='dashboard/index.php?guest=1'" aria-label="Acessar sem entrar">
+        Acessar sem entrar
+      </button>
+
+      <button class="btn secondary" onclick="window.location.href='auth/login.php'" aria-label="Entrar">
+        Entrar
+      </button>
+
+      <button class="btn secondary" onclick="window.location.href='auth/register.php'" aria-label="Registrar">
+        Registrar
+      </button>
+    </main>
+  </div>
+</body>
+</html>

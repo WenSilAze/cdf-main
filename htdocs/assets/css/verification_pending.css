@@ -1,0 +1,149 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #0ea5e9 0%, #065f46 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.pending-container {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 550px;
+  padding: 50px 40px;
+  text-align: center;
+}
+
+.email-icon {
+  font-size: 5rem;
+  margin-bottom: 20px;
+  color: #0ea5e9;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.pending-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 15px;
+}
+
+.email-display {
+  background: #f1f5f9;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 15px 0;
+  word-break: break-all;
+  font-size: 1.1rem;
+}
+
+.pending-content p {
+  color: #64748b;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 25px;
+}
+
+.highlight {
+  background: #f0f9ff;
+  border-left: 4px solid #0ea5e9;
+  padding: 15px;
+  border-radius: 6px;
+  margin: 20px 0;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.highlight ul {
+  margin-left: 20px;
+  margin-top: 8px;
+  text-align: left;
+}
+
+.highlight li {
+  margin-bottom: 4px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s;
+  border: none;
+  cursor: pointer;
+  margin: 10px 5px;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
+}
+
+.btn-secondary {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.btn-secondary:hover {
+  background: #cbd5e1;
+  box-shadow: none;
+}
+
+.timer {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-top: 20px;
+  font-weight: 500;
+}
+
+@media (max-width: 480px) {
+  .pending-container {
+    padding: 40px 25px;
+    margin: 10px;
+  }
+  
+  .pending-header h1 {
+    font-size: 1.7rem;
+  }
+  
+  .email-icon {
+    font-size: 4rem;
+  }
+  
+  .btn {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+  }
+  
+  .highlight {
+    font-size: 0.9rem;
+  }
+  
+  .email-display {
+    font-size: 1rem;
+    padding: 10px 15px;
+  }
+}

@@ -1,0 +1,22 @@
+# Dependências do PHP
+vendor/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arquivos temporários
+*.tmp
+*.temp
+~*
+
+# Banco de dados local
+*.sqlite
+*.db
