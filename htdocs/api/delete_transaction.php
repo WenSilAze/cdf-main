@@ -16,9 +16,9 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $input = json_decode(file_get_contents('php://input'), true);
-$id = $input['id'] ?? null;
+$id = isset($input['id']) ? intval($input['id']) : 0;
 
-if (!$id || !is_numeric($id)) {
+if ($id <= 0) {
     http_response_code(400);
     echo json_encode(['error' => 'ID inválido']);
     exit;
@@ -27,22 +27,29 @@ if (!$id || !is_numeric($id)) {
 try {
     $pdo = connectDB();
 
-    // Garante que só pode deletar transações do próprio usuário
     $stmt = $pdo->prepare("
         DELETE FROM transactions
         WHERE id = ? AND user_id = ?
     ");
-    $deleted = $stmt->execute([$id, $_SESSION['user_id']]);
+
+    $stmt->execute([$id, $_SESSION['user_id']]);
 
     if ($stmt->rowCount() > 0) {
-        echo json_encode(['success' => true]);
+        echo json_encode([
+            'success' => true
+        ]);
     } else {
         http_response_code(404);
-        echo json_encode(['error' => 'Transação não encontrada ou acesso negado']);
+        echo json_encode([
+            'error' => 'Transação não encontrada ou acesso negado'
+        ]);
     }
 
 } catch (PDOException $e) {
     error_log("Erro ao excluir transação: " . $e->getMessage());
+
     http_response_code(500);
-    echo json_encode(['error' => 'Erro interno do servidor']);
+    echo json_encode([
+        'error' => 'Erro interno do servidor'
+    ]);
 }

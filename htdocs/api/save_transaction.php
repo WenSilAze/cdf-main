@@ -45,13 +45,17 @@ try {
         INSERT INTO transactions (user_id, type, value, description, timestamp_ms)
         VALUES (?, ?, ?, ?, ?)
     ");
-    $stmt->execute([
-        $_SESSION['user_id'],
-        $type,
-        $value,
-        $description,
-        $timestampMs
-    ]);
+
+error_log("INPUT TYPE: " . $input['type']);
+error_log("TYPE PARA BANCO: " . $type);
+
+$stmt->execute([
+    $_SESSION['user_id'],
+    $type,
+    $value,
+    $description,
+    $timestampMs
+]);
 
     echo json_encode(['success' => true, 'id' => $pdo->lastInsertId()]);
 

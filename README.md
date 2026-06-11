@@ -25,7 +25,7 @@ A **Carteira Digital Financeira** permite que você:
 | **Filtros Temporais** | 15m, 1h, 4h, 1d, 1m, 3m, 1y e todos os períodos | ✅ Funcional |
 | **Limites Personalizados** | Define alertas amarelo (aviso) e vermelho (crítico) | ✅ Funcional |
 | **Histórico Completo** | Registro de todas as transações | ✅ Funcional |
-| **Google Login** | Autenticação com Google (opcional - localhost não suporta) | ⚠️ Em desenvolvimento |
+| ⚠ Em desenvolvimento (requer configuração do Google Cloud Console) | ⚠️ Em desenvolvimento |
 
 ## 🛠 Tecnologias Utilizadas
 
@@ -78,7 +78,6 @@ define('DB_PASS', '');
 1. Inicie o servidor: `php -S localhost:8000 -t ./htdocs`
 2. Acesse: `http://localhost:8000/setup.php`
 3. Verifique se tudo passou nos testes
-4. Clique em **"🔧 Inicializar BD"** para criar as tabelas
 
 **Opção B: Criar Manualmente**
 
@@ -104,15 +103,21 @@ CREATE TABLE users (
 CREATE TABLE transactions (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
-    type ENUM('deposit', 'withdrawal') NOT NULL,
-    value DECIMAL(10, 2) NOT NULL,
+    type ENUM('earn', 'spend') NOT NULL,
+    value DECIMAL(10,2) NOT NULL,
     description TEXT,
     timestamp_ms BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+
+    FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
     INDEX (user_id),
     INDEX (timestamp_ms)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_unicode_ci;
 
 -- Tabela de limites
 CREATE TABLE limits (
@@ -167,8 +172,8 @@ Configure o DocumentRoot apontando para `/htdocs`
 ### Usar o Dashboard
 
 1. **Adicione uma transação:**
-   - **Ganhei** → Registrar entrada de dinheiro (depósito)
-   - **Gastei** → Registrar saída de dinheiro (saque)
+   - **Ganhei** → Registrar entrada de dinheiro.
+   - **Gastei** → Registrar saída de dinheiro.
    - Digite o valor e clique no botão
    - Descrição é opcional
 
@@ -185,7 +190,7 @@ Configure o DocumentRoot apontando para `/htdocs`
 
 4. **Gerenciar transações:**
    - Veja o histórico completo
-   - Remova transações antigo clicando sobre elas no gráfico
+   - Remova transações antigas clicando sobre elas no gráfico.
    - Saldo se atualiza automaticamente
 
 ## 🔌 API REST
@@ -196,37 +201,42 @@ Retorna todas as transações do usuário.
 
 **Response:**
 ```json
-{
-  "transactions": [
-    {
-      "id": 1,
-      "type": "deposit",
-      "value": 1000.00,
-      "description": "Salário",
-      "timestamp_ms": 1717900000000
-    }
-  ]
-}
+[
+  {
+    "id":1,
+    "type":"earn",
+    "value":"50000.00",
+    "description":null,
+    "timestamp_ms":1781136293941
+  }
+]
 ```
 
 ### POST `/api/save_transaction.php`
 
-Cria ou atualiza uma transação.
+Cria uma nova transação.
 
 **Request:**
 ```json
 {
-  "type": "deposit|withdrawal",
-  "value": 1000.00,
-  "description": "Descrição"
+  "type":"earn|spend",
+  "value":1000,
+  "description":"Salário",
+  "timestampMs":1717900000000
 }
 ```
 
-### DELETE `/api/delete_transaction.php`
+### POST `/api/delete_transaction.php`
 
-Deleta uma transação por ID.
+Remove uma transação do usuário autenticado.
 
-**Query:** `?id=1`
+**Request:**
+
+```json
+{
+  "id": 1
+}
+```
 
 ### GET/POST `/api/get_limits.php` e `/api/save_limits.php`
 
@@ -235,8 +245,8 @@ Gerencia limites de alerta do usuário.
 ## 🔐 Segurança
 
 - ✅ Senhas com hash bcrypt
-- ✅ Proteção CSRF com sessões
-- ✅ Validação de email com token
+- ✅ Controle de sessão PHP
+- ⚠ Sistema preparado para verificação de e-mail
 - ✅ Autenticação obrigatória para acesso aos dados
 - ✅ Prepared statements contra SQL injection
 
@@ -359,7 +369,7 @@ Faculdade/Instituição Senac
 
 **Produção**
 - [x] Sistema de verificação de email (desativado em desenvolvimento)
-- [ ] Deploy em produção (InfinityFree/Heroku)
+- [ ] Deploy em produção (InfinityFree, Hostinger ou VPS)
 - [ ] Google Login configurado para domínio
 - [ ] Testes automatizados
 - [ ] CI/CD Pipeline

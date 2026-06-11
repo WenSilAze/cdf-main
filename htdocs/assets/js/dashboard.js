@@ -21,7 +21,7 @@ function calculateMaxHistoricalBalance() {
   let runningBalance = 0;
   let maxBalance = 0;
   for (const t of transactions) {
-    runningBalance += (t.type === 'earn' ? t.value : -t.value);
+    runningBalance += (t.type === 'earn' || t.type === 'deposit' ? t.value : -t.value);
     if (runningBalance > maxBalance) {
       maxBalance = runningBalance;
     }
@@ -87,11 +87,11 @@ async function loadTransactions() {
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data)) {
-          loaded = data.map(t => ({
-            ...t,
-            value: parseFloat(t.value),
-            timestampMs: parseInt(t.timestamp_ms)
-          }));
+loaded = data.map(t => ({
+    ...t,
+    value: parseFloat(t.value),
+    timestampMs: parseInt(t.timestamp_ms)
+}));
         }
       }
     } catch (err) {
@@ -99,6 +99,17 @@ async function loadTransactions() {
     }
   }
   transactions = Array.isArray(loaded) ? loaded : [];
+
+const saldoTeste = transactions.reduce(
+    (acc, t) =>
+        acc + (
+            t.type === 'earn' || t.type === 'deposit'
+                ? t.value
+                : -t.value
+        ),
+    0
+);
+
   renderChartAfterLoad();
 }
 
@@ -205,9 +216,15 @@ function initChartWhenReady() {
                   let balanceAtPoint = 0;
                   for (let i = 0; i <= index; i++) {
                     const tx = transactions[i];
-                    balanceAtPoint += (tx.type === 'earn' ? tx.value : -tx.value);
+                    balanceAtPoint += (
+                      tx.type === 'earn' || tx.type === 'deposit')
+                      ? tx.value
+                      : -tx.value;
                   }
-                  const movementLabel = t.type === 'earn' ? 'Ganhei' : 'Gastei';
+                 const movementLabel =
+                 (t.type === 'earn' || t.type === 'deposit')
+                 ? 'Ganhei'
+                 : 'Gastei';
                   return [
                     `${movementLabel}: ${formatCurrency(t.value)}`,
                     `Saldo: ${formatCurrency(balanceAtPoint)}`
@@ -257,7 +274,15 @@ function renderChartAfterLoad() {
     return;
   }
 
-  const totalBalance = transactions.reduce((acc, t) => acc + (t.type === 'earn' ? t.value : -t.value), 0);
+  const totalBalance = transactions.reduce((acc, t) => {
+
+    return acc + (
+        t.type === 'earn' || t.type === 'deposit'
+            ? t.value
+            : -t.value
+    );
+}, 0);
+
   document.getElementById('balanceValue').textContent = formatCurrency(totalBalance);
   updateBalanceColor(totalBalance);
 
@@ -271,15 +296,17 @@ function renderChartAfterLoad() {
   }
 
   document.getElementById('emptyMessage').style.display = 'none';
-  const sorted = [...transactions].sort((a, b) => a.timestampMs - b.timestampMs);
+  transactions.sort((a, b) => a.timestampMs - b.timestampMs);
+
   const labels = [];
   const data = [];
   let runningBalance = 0;
-  for (const t of sorted) {
-    runningBalance += (t.type === 'earn' ? t.value : -t.value);
+
+  for (const t of transactions) {
+    runningBalance += (t.type === 'earn' || t.type === 'deposit'? t.value : -t.value);
     labels.push(formatTimeShort(t.time));
     data.push(parseFloat(runningBalance.toFixed(2)));
-  }
+}
   chart.data.labels = labels;
   chart.data.datasets[0].data = data;
   chart.update();
@@ -366,7 +393,7 @@ function showNewContextMenu(index) {
   document.addEventListener('click', closeContextMenuOnClickOutside);
 }
 
-// ✅ CORREÇÃO: capturar ID ANTES do splice
+// ✅ capturar ID ANTES do splice
 function removeSelectedPoint() {
   if (selectedPointIndex >= 0 && selectedPointIndex < transactions.length) {
     const transactionToRemove = { ...transactions[selectedPointIndex] };
