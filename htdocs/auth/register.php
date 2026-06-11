@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php else: ?>
       <form method="POST" action="" id="registerForm">
       <div class="form-group">
-        <label for="name">Nome completo</label>
+        <label for="name">Como deseja ser chamado?</label>
         <input
           type="text"
           id="name"
